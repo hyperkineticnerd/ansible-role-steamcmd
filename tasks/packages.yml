@@ -1,0 +1,23 @@
+---
+- name: gather os specific variables
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "../vars/{{ ansible_os_family }}-{{ ansible_userspace_bits }}.yml"
+    - "../vars/{{ ansible_os_family }}.yml"
+    - "../vars/Debian.yml"
+
+- name: add i386 architecture onto Debian family
+  command: dpkg --add-architecture i386
+  when: ansible_os_family == 'Debian'
+
+- name: update the apt package index
+  apt: update_cache=yes
+  when: ansible_pkg_mgr == 'apt'
+
+- name: install the dependencies required
+  package:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items: 
+    - "{{ steamcmd_packages }}"

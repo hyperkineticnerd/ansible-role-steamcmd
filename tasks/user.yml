@@ -1,0 +1,14 @@
+---
+- name: add steamcmd group
+  group:
+    name: "{{ steamcmd_user }}"
+    state: present
+
+- name: add steamcmd user
+  user:
+    name: "{{ steamcmd_user }}"
+    group: "{{ steamcmd_user }}"
+    home: "{{ steamcmd_user_home }}"
+    shell: /bin/bash
+    comment: "Steam CMD user"
+    createhome: yes
